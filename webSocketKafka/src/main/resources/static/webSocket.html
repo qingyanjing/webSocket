@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket测试</title>
+    <style>
+        body{
+            text-align:center
+        }
+        .tile{
+            text-align: center;
+        }
+        .box2 {margin:0 auto;border:1px solid #000;width:600px;height:100px}
+    </style>
+</head>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<body>
+<h3 class="tile">区域风险指数展示</h3>
+<div class="box2">
+    <table>
+        <tr>
+            <td>区域编号：</td>
+            <td width="100px"><span id="areaId"></span></td>
+            <td>风险值：</td>
+            <td width="100px"><span id="riskValue"></span></td>
+            <td>环比风险值：</td>
+            <td width="100px"><span id="preHourRiskValue"></span></td>
+        </tr>
+        <tr>
+            <td>同比风险值：</td>
+            <td width="100px"><span id="yesterdaySameHourRiskValue"></span></td>
+            <td>预警等级：</td>
+            <td width="100px"><span id="earlyWarningLevelId"></span></td>
+            <td>持续时长：</td>
+            <td width="100px"><span id="continueTimeLength"></span></td>
+        </tr>
+    </table>
+</div>
+<!--<textarea id = "messageId" readonly="readonly" cols="150" rows="30" >
+</textarea>-->
+<script type="text/javascript">
+    var socket;
+    if (typeof (WebSocket) == "undefined") {
+        console.log("浏览器不支持WebSocket");
+    } else {
+        console.log("浏览器支持WebSocket");
+        //实现化WebSocket对象
+        //指定要连接的服务器地址与端口建立连接
+        //注意ws、wss使用不同的端口。我使用自签名的证书测试，
+        //无法使用wss，浏览器打开WebSocket时报错
+        //ws对应http、wss对应https。
+        socket = new WebSocket("ws://localhost:8155/ws/wbSocket");
+        //连接打开事件
+        socket.onopen = function() {
+            console.log("webSocket 已连接");
+            //socket.send("消息发送测试(From Client)");
+        };
+        //收到消息事件
+        socket.onmessage = function(msg) {
+            if (msg.data != ""){
+                //解析服务端返回的json字符串
+                var vo = JSON.parse(msg.data);
+                if (vo != null){
+                    // 更新dom
+                    $("#areaId").html(vo.areaId);
+                    $("#riskValue").html(vo.riskValue);
+                    $("#preHourRiskValue").html(vo.preHourRiskValue);
+                    $("#yesterdaySameHourRiskValue").html(vo.yesterdaySameHourRiskValue);
+                    $("#earlyWarningLevelId").html(vo.earlyWarningLevelId);
+                    $("#continueTimeLength").html(vo.continueTimeLength);
+                }
+                else{
+                    // 默认值
+                    $("#areaId").html("00");
+                    $("#riskValue").html("00");
+                    $("#preHourRiskValue").html("00");
+                    $("#yesterdaySameHourRiskValue").html("00");
+                    $("#earlyWarningLevelId").html("00");
+                    $("#continueTimeLength").html("00");
+                }
+            }
+            /*$("#messageId").append(msg.data+ "\n");
+            console.log(msg.data  );*/
+        };
+        //连接关闭事件
+        socket.onclose = function() {
+            console.log("Socket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function() {
+            alert("Socket发生了错误");
+        }
+        //窗口关闭时，关闭连接
+        window.unload=function() {
+            socket.close();
+        };
+    }
+</script>
+
+</body>
+</html>

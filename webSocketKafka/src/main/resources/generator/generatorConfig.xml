@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 引入外部属性文件 -->
+    <properties resource="generator/generator.properties" />
+
+    <context id="Oracle" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="javaFileEncoding" value="UTF-8" />
+
+        <!-- 配置通用Mapper的MBG插件相关信息 -->
+        <plugin type="${mapper.plugin}">
+            <property name="mappers" value="${mapper.Mapper}" />
+            <property name="caseSensitive" value="true" />
+            <property name="forceAnnotation" value="true" />
+            <property name="lombok" value="Getter,Setter,Data,ToString,Accessors,EqualsAndHashCode" />
+        </plugin>
+        <commentGenerator type="org.mybatis.generator.MyCommentGenerator"></commentGenerator>
+        <!-- 配置连接数据库的基本信息 -->
+        <jdbcConnection driverClass="${jdbc.driverClass}" connectionURL="${jdbc.url}" userId="${jdbc.user}" password="${jdbc.password}">
+            <!-- 针对oracle数据库 -->
+            <property name="remarksReporting" value="true"></property>
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 配置Java实体类存放位置 -->
+        <javaModelGenerator targetPackage="com.huangpeng.messages.entities" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 配置XxxMapper.xml存放位置 -->
+        <sqlMapGenerator targetPackage="mybatis/mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!-- 配置XxxMapper.java存放位置 -->
+        <javaClientGenerator targetPackage="com.huangpeng.messages.dao" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- 参与逆向工程的表-->
+      
+        <!--   文件存储表(省-发行方)  -->
+        <table tableName="EWS_SA_AREARISKINDEX_RT" />
+    </context>
+</generatorConfiguration>

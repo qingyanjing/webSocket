@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huangpeng.messages.dao.EwsSaAreariskindexRtMapper">
+  <resultMap id="BaseResultMap" type="com.huangpeng.messages.entities.EwsSaAreariskindexRt">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="AREA_ID" jdbcType="VARCHAR" property="areaId" />
+    <result column="STAT_TIME" jdbcType="TIMESTAMP" property="statTime" />
+    <result column="RISK_VALUE" jdbcType="DECIMAL" property="riskValue" />
+    <result column="PRE_HOUR_RISK_VALUE" jdbcType="DECIMAL" property="preHourRiskValue" />
+    <result column="YESTERDAY_SAME_HOUR_RISK_VALUE" jdbcType="DECIMAL" property="yesterdaySameHourRiskValue" />
+    <result column="EARLY_WARNING_LEVEL_ID" jdbcType="VARCHAR" property="earlyWarningLevelId" />
+    <result column="CONTINUE_TIME_LENGTH" jdbcType="DECIMAL" property="continueTimeLength" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="selectNotifyList" resultMap="BaseResultMap">
+        SELECT
+              A.AREA_ID,
+              A.STAT_TIME,
+              A.RISK_VALUE,
+              A.PRE_HOUR_RISK_VALUE,
+              A.YESTERDAY_SAME_HOUR_RISK_VALUE,
+              A.EARLY_WARNING_LEVEL_ID,
+              A.CONTINUE_TIME_LENGTH,
+              A.CREATE_TIME,
+              A.UPDATE_TIME
+        FROM EWS_SA_AREARISKINDEX_RT A
+        WHERE AREA_ID = #{AREAID}
+    </select>
+
+    <select id="selectLatestTimeModel" resultMap="BaseResultMap">
+        SELECT
+              B.AREA_ID,
+              B.STAT_TIME,
+              B.RISK_VALUE,
+              B.PRE_HOUR_RISK_VALUE,
+              B.YESTERDAY_SAME_HOUR_RISK_VALUE,
+              B.EARLY_WARNING_LEVEL_ID,
+              B.CONTINUE_TIME_LENGTH,
+              B.CREATE_TIME,
+              B.UPDATE_TIME
+        FROM (SELECT
+              A.AREA_ID,
+              A.STAT_TIME,
+              A.RISK_VALUE,
+              A.PRE_HOUR_RISK_VALUE,
+              A.YESTERDAY_SAME_HOUR_RISK_VALUE,
+              A.EARLY_WARNING_LEVEL_ID,
+              A.CONTINUE_TIME_LENGTH,
+              A.CREATE_TIME,
+              A.UPDATE_TIME
+         FROM EWS_SA_AREARISKINDEX_RT A
+         ORDER BY A.CREATE_TIME DESC) B
+         WHERE ROWNUM =1
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM EWS_SA_AREARISKINDEX_RT
+    </select>
+
+</mapper>
